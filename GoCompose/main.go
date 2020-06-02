@@ -26,11 +26,11 @@ func main() {
 
 	//t.ParseComposeData("2.1", services, net)
 	r := mux.NewRouter()
-	r.HandleFunc("/start/{id}", api.GET_Start).Methods("GET")
-	r.HandleFunc("/dockercompose", api.GET_ResHandler).Methods("GET")
+	r.HandleFunc("/stack/{id}", api.GET_Stack).Methods("GET")
 
-	r.HandleFunc("/dockercompose/{id}", api.GET_ID_ResHandler).Methods("GET")
-	r.HandleFunc("/dockercompose", api.POST_ResHandler).Methods("POST")
+	r.HandleFunc("/dockercompose", api.GET_dockercompose).Methods("GET")
+	r.HandleFunc("/dockercompose/{id}", api.GET_ID_dockercompose).Methods("GET")
+	r.HandleFunc("/dockercompose", api.POST_dockercompose).Methods("POST")
 	// r.HandleFunc("/{res}/{id}", api.PATCH_ResHandler).Methods("PATCH")
 
 	log.Fatal(http.ListenAndServe(":5000", r))

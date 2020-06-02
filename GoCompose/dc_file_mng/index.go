@@ -1,4 +1,4 @@
-package dockercomposewrite
+package dc_file_mng
 
 import (
 	"fmt"

@@ -9,6 +9,7 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
+	u "primitivo.fr/applinh/go-docker-compose/utils"
 )
 
 type Vol struct {
@@ -52,7 +53,8 @@ func CreateNewContainer(composeUuid string) (string, error) {
 	fmt.Printf("Container %s has started \n", cont.ID)
 	return cont.ID, nil
 }
-func ListContainers() error {
+
+func ListContainers() ([]string, error) {
 	cli, err := client.NewEnvClient()
 	if err != nil {
 		panic(err)
@@ -64,13 +66,14 @@ func ListContainers() error {
 	}
 
 	if len(containers) > 0 {
+		r_containers := []string{}
 		for _, container := range containers {
-			fmt.Printf("Container ID: %s \n", container.ID)
+			r_containers = append(r_containers, container.ID)
 		}
+		return r_containers, nil
 	} else {
-		fmt.Println("There are no containers running")
+		return nil, &u.ErrorString{S: "NO_STACK"}
 	}
-	return nil
 }
 
 func StopContainer(containerID string) error {
