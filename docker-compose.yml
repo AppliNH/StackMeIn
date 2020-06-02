@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+
+  # mainenv:
+  #   image: docker:stable-dind
+  #   privileged: yes
+  #   container_name: mainEnv
+  #   ports:
+  #     - 4242:4242
+  #   networks:
+  #     - main-network
+  #   volumes:
+  #     - ./mainEnv:/usr/mainEnv
+  #     - "./GoCompose:/usr/GoCompose"
+  #   entrypoint: [ "/bin/sh","/usr/mainEnv/scripts/installDep.sh"]
+  
+  mainclient:
+    build: ./mainclient/
+    hostname: mainclient
+    ports:
+      - 80:80
+    networks: 
+      - main_network
+  
+  gocompose:
+    build: ./GoCompose/
+    hostname: gocompose
+    ports:
+      - 5000:5000
+    networks: 
+      - main_network
+
+networks:
+  main-network:

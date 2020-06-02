@@ -1,0 +1,1 @@
+apk add docker-compose go && cd /usr/GoCompose && go mod download && go run main.go && tail -f /dev/null # && cd /usr/mainEnv && docker-compose up
