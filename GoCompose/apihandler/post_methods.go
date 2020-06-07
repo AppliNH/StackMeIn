@@ -31,13 +31,4 @@ func POST_dockercompose(w http.ResponseWriter, r *http.Request) {
 		response := map[string]string{"statusCode": "200", "id": dbRes["id"].(string)}
 		json.NewEncoder(w).Encode(response)
 	}
-
-	// if uuid, erro := t.ParseComposeData(data["version"].(string), data["services"].(map[string]interface{}), data["networks"].(map[string]interface{})); erro != nil {
-	// 	fmt.Println(erro)
-	// 	http.Error(w, erro.Error(), http.StatusBadRequest)
-	// 	return
-	// } else {
-	// 	response := map[string]string{"statusCode": "200", "id": uuid}
-	// 	json.NewEncoder(w).Encode(response)
-	// }
 }
