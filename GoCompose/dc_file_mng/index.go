@@ -41,16 +41,16 @@ func createNetworks(data map[string]interface{}) map[string]m.Network {
 	return networks
 }
 
-func ParseComposeData(version string, services map[string]interface{}, networks map[string]interface{}) (string, error) {
+func ParseComposeData(uuid string, version string, services map[string]interface{}, networks map[string]interface{}) (string, error) {
 
 	servicesObj := createServices(services)
 	networksObj := createNetworks(networks)
 
-	return InitDockerComposeFile(version, servicesObj, networksObj)
+	return InitDockerComposeFile(uuid, version, servicesObj, networksObj)
 
 }
 
-func InitDockerComposeFile(version string, services map[string]m.Service, networks map[string]m.Network) (string, error) {
+func InitDockerComposeFile(uuid string, version string, services map[string]m.Service, networks map[string]m.Network) (string, error) {
 
 	t := m.T{Version: version, Services: services, Networks: networks}
 
@@ -59,12 +59,11 @@ func InitDockerComposeFile(version string, services map[string]m.Service, networ
 		log.Fatalf("error: %v", err)
 	}
 
-	if uuid, erro := utils.WriteDockerComposeFile(string(d)); erro != nil {
+	if uuid, erro := utils.WriteDockerComposeFile(uuid, string(d)); erro != nil {
 		return "", erro
 	} else {
 		return uuid, nil
 	}
-
 }
 
 func ReadDockerComposeFile(uuid string) (m.T, error) {

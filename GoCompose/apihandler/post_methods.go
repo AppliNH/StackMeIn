@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	t "primitivo.fr/applinh/go-docker-compose/dc_file_mng"
+	db "primitivo.fr/applinh/go-docker-compose/dbcontroller"
 )
 
 func POST_dockercompose(w http.ResponseWriter, r *http.Request) {
@@ -19,13 +19,25 @@ func POST_dockercompose(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	write_data := make(map[string]interface{})
+	write_data["dockercompose"] = data
+	write_data["containers"] = []string{}
 
-	if uuid, erro := t.ParseComposeData(data["version"].(string), data["services"].(map[string]interface{}), data["networks"].(map[string]interface{})); erro != nil {
-		fmt.Println(erro)
-		http.Error(w, erro.Error(), http.StatusBadRequest)
+	dbRes, err := db.WriteToDB("stacks", write_data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	} else {
-		response := map[string]string{"statusCode": "200", "success": "true", "id": uuid}
+		response := map[string]string{"statusCode": "200", "id": dbRes["id"].(string)}
 		json.NewEncoder(w).Encode(response)
 	}
+
+	// if uuid, erro := t.ParseComposeData(data["version"].(string), data["services"].(map[string]interface{}), data["networks"].(map[string]interface{})); erro != nil {
+	// 	fmt.Println(erro)
+	// 	http.Error(w, erro.Error(), http.StatusBadRequest)
+	// 	return
+	// } else {
+	// 	response := map[string]string{"statusCode": "200", "id": uuid}
+	// 	json.NewEncoder(w).Encode(response)
+	// }
 }

@@ -13,6 +13,6 @@ COPY . .
 # Build the Go app
 RUN go build -o gocompose .
 
-EXPOSE 5000
+EXPOSE 1997
 
 CMD ["./gocompose"]

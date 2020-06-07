@@ -20,8 +20,8 @@ func GenerateUuid() string {
 	return uuid
 }
 
-func WriteDockerComposeFile(data string) (string, error) {
-	uuid := GenerateUuid()
+func WriteDockerComposeFile(uuid string, data string) (string, error) {
+
 	_, erro := os.Stat("./composefiles/" + uuid)
 
 	if os.IsNotExist(erro) {

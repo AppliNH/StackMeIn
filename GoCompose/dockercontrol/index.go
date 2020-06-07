@@ -3,7 +3,12 @@ package dockercontrol
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"regexp"
+	"strings"
+
+	"time"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
@@ -16,7 +21,7 @@ type Vol struct {
 	Labels map[string]string
 }
 
-func CreateNewContainer(composeUuid string) (string, error) {
+func CreateNewContainer(composeUuid string) (map[string]interface{}, error) {
 
 	dir, _ := os.Getwd()
 	fmt.Println(dir)
@@ -51,10 +56,34 @@ func CreateNewContainer(composeUuid string) (string, error) {
 
 	cli.ContainerStart(context.Background(), cont.ID, types.ContainerStartOptions{})
 	fmt.Printf("Container %s has started \n", cont.ID)
-	return cont.ID, nil
+	time.Sleep(5 * time.Second)
+
+	r, _ := cli.ContainerExecCreate(context.Background(), cont.ID, types.ExecConfig{
+		Cmd:          []string{"/usr/scripts/getinfos.sh"},
+		Tty:          true,
+		AttachStderr: true,
+		AttachStdout: true,
+		AttachStdin:  true,
+		Detach:       true,
+	})
+
+	res, _ := cli.ContainerExecAttach(context.Background(), r.ID, types.ExecConfig{})
+	bytes, err := ioutil.ReadAll(res.Reader)
+
+	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
+
+	fres := strings.Fields(string(bytes))
+	for i := 0; i < len(fres); i++ {
+		fres[i] = reg.ReplaceAllString(fres[i], "")
+	}
+
+	response := make(map[string]interface{})
+	response["containerID"] = cont.ID
+	response["otherContainers"] = fres
+	return response, nil
 }
 
-func ListContainers() ([]string, error) {
+func ListContainers() ([]types.Container, error) {
 	cli, err := client.NewEnvClient()
 	if err != nil {
 		panic(err)
@@ -66,11 +95,7 @@ func ListContainers() ([]string, error) {
 	}
 
 	if len(containers) > 0 {
-		r_containers := []string{}
-		for _, container := range containers {
-			r_containers = append(r_containers, container.ID)
-		}
-		return r_containers, nil
+		return containers, nil
 	} else {
 		return nil, &u.ErrorString{S: "NO_STACK"}
 	}
