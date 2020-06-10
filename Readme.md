@@ -107,3 +107,9 @@ You'll find objects like this :
     }
 }
 ```
+
+# How do I run this ?
+
+- `git clone` the project
+- `cd` inside of it
+- run `docker-compose build` && `docker-compose up`
