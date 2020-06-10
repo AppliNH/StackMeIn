@@ -1,4 +1,4 @@
-# easyStack or "StackMeIn" project
+# StackMeIn project
 
 <div align="center">
 <img src="https://i.kym-cdn.com/photos/images/original/001/465/006/fe5.gif">
