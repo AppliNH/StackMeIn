@@ -1,34 +1,38 @@
 version: "3.8"
 services:
-
-  # mainenv:
-  #   image: docker:stable-dind
-  #   privileged: yes
-  #   container_name: mainEnv
+  
+  # mainclient:
+  #   build: ./mainclient/
+  #   hostname: mainclient
   #   ports:
-  #     - 4242:4242
-  #   networks:
-  #     - main-network
-  #   volumes:
-  #     - ./mainEnv:/usr/mainEnv
-  #     - "./GoCompose:/usr/GoCompose"
-  #   entrypoint: [ "/bin/sh","/usr/mainEnv/scripts/installDep.sh"]
+  #     - 80:80
+  #   networks: 
+  #     - main_network
   
-  mainclient:
-    build: ./mainclient/
-    hostname: mainclient
-    ports:
-      - 80:80
-    networks: 
-      - main_network
-  
-  gocompose:
-    build: ./GoCompose/
-    hostname: gocompose
+  firego:
+    image: tmprimitivo/firego
+    hostname: firego
     ports:
       - 5000:5000
     networks: 
       - main_network
-
+    
+  gocompose:
+    build: ./GoCompose/
+    privileged: true
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./GoCompose/composefiles:/app/composefiles
+      - ./GoCompose/scripts:/app/scripts
+    environment:
+      - MODE=COMPOSE
+      - "PROJPWD=${PWD}"
+    hostname: gocompose
+    ports:
+      - 1997:1997
+    networks: 
+      - main_network
+      
 networks:
-  main-network:
+  main_network:
+    driver: bridge

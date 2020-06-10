@@ -29,8 +29,8 @@ func main() {
 	r.HandleFunc("/stack/{id}", api.GET_Stack).Methods("GET")
 	r.HandleFunc("/stack/{id}", api.DELETE_ID_stack).Methods("DELETE")
 
-	r.HandleFunc("/dockercompose", api.GET_dockercompose).Methods("GET")
-	r.HandleFunc("/dockercompose/{id}", api.GET_ID_dockercompose).Methods("GET")
+	r.HandleFunc("/dockercompose", api.GET_dockercompose).Methods("GET")         // TODO: DEPRECATED
+	r.HandleFunc("/dockercompose/{id}", api.GET_ID_dockercompose).Methods("GET") // TODO: DEPRECATED
 	r.HandleFunc("/dockercompose", api.POST_dockercompose).Methods("POST")
 	// r.HandleFunc("/{res}/{id}", api.PATCH_ResHandler).Methods("PATCH")
 

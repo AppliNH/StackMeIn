@@ -23,9 +23,19 @@ type Vol struct {
 
 func CreateNewContainer(composeUuid string) (map[string]interface{}, error) {
 
-	dir, _ := os.Getwd()
+	var dir string
+	mode := os.Getenv("MODE")
+
+	if mode == "COMPOSE" {
+		fmt.Println("yes")
+		dir = os.Getenv("PROJPWD") + "/GoCompose"
+	} else {
+		dir, _ = os.Getwd()
+	}
+
 	fmt.Println(dir)
 	cli, err := client.NewEnvClient()
+	cli.ImagePull(context.Background(), "docker/compose", types.ImagePullOptions{})
 	if err != nil {
 		fmt.Println("Unable to create docker client")
 		panic(err)

@@ -6,10 +6,21 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 func Get_byid(ressource string, id string) (map[string]interface{}, error) {
-	resp, err := http.Get("http://localhost:5000/" + ressource + "/" + id)
+	var url string
+	mode := os.Getenv("MODE")
+
+	if mode == "COMPOSE" {
+		fmt.Println("yes")
+		url = "http://firego:5000/"
+	} else {
+		url = "http://localhost:5000/"
+	}
+
+	resp, err := http.Get(url + ressource + "/" + id)
 
 	if err != nil {
 		log.Fatalln(err)
